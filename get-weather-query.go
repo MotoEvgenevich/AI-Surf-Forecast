@@ -12,11 +12,13 @@ var forecastWind structs.WeatherForecast
 var forecastMarine structs.MarineForecast
 
 func main() {
-	forecastWind, err := getWindWeatherForecast()
+	url := "https://api.open-meteo.com/v1/forecast?latitude=42.13076&longitude=41.65917&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&timezone=Europe%2FMoscow"
+	forecastWind, err := getWindWeatherForecast(url)
 	if err != nil {
 		log.Fatalf("Ошибка получения прогноза: %v", err)
 	}
-	forecastMarine, err := getMarineForecast()
+	url = "https://marine-api.open-meteo.com/v1/marine?latitude=42.0625&longitude=41.75&current=wave_height,wave_direction,wave_period,wind_wave_height,wind_wave_direction,wind_wave_period,wind_wave_peak_period,swell_wave_height,swell_wave_direction,swell_wave_period,swell_wave_peak_period&hourly=wave_height,wave_direction,wave_period,wind_wave_height,wind_wave_direction,wind_wave_period,wind_wave_peak_period,swell_wave_height,swell_wave_direction,swell_wave_period,swell_wave_peak_period&daily=wave_height_max,wave_period_max,wind_wave_height_max,wind_wave_period_max,wind_wave_peak_period_max,swell_wave_height_max,swell_wave_direction_dominant,swell_wave_period_max,swell_wave_peak_period_max&timezone=Europe%2FMoscow"
+	forecastMarine, err := getMarineForecast(url)
 	if err != nil {
 		log.Fatalf("Ошибка получения прогноза: %v", err)
 	}
@@ -26,11 +28,13 @@ func main() {
 	fmt.Printf("Порывы ветра: %v %v\n", forecastWind.Current.WindGusts10m, forecastWind.CurrentUnits.WindGusts10m)
 	// print marine example
 	fmt.Printf("Время: %v\n", forecastMarine.Current.Time)
+	fmt.Printf("Широта: %v\n Долгота: %v\n", forecastMarine.Latitude, forecastMarine.Longitude)
 	fmt.Printf("Высота свеволовой волны: %v %v\n", forecastMarine.Current.SwellWaveHeight, forecastMarine.CurrentUnits.SwellWaveHeight)
+
 }
 
-func getWindWeatherForecast() (structs.WeatherForecast, error) {
-	resp, err := http.Get("https://api.open-meteo.com/v1/forecast?latitude=42.13076&longitude=41.65917&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&timezone=Europe%2FMoscow")
+func getWindWeatherForecast(url string) (structs.WeatherForecast, error) {
+	resp, err := http.Get(url)
 	if err != nil {
 		return structs.WeatherForecast{}, fmt.Errorf("ошибка при отправке запроса: %v", err)
 	}
@@ -44,8 +48,8 @@ func getWindWeatherForecast() (structs.WeatherForecast, error) {
 	return forecastWind, nil
 }
 
-func getMarineForecast() (structs.MarineForecast, error) {
-	resp, err := http.Get("https://marine-api.open-meteo.com/v1/marine?latitude=42.0625&longitude=41.75&current=wave_height,wave_direction,wave_period,wind_wave_height,wind_wave_direction,wind_wave_period,wind_wave_peak_period,swell_wave_height,swell_wave_direction,swell_wave_period,swell_wave_peak_period&hourly=wave_height,wave_direction,wave_period,wind_wave_height,wind_wave_direction,wind_wave_period,wind_wave_peak_period,swell_wave_height,swell_wave_direction,swell_wave_period,swell_wave_peak_period&daily=wave_height_max,wave_period_max,wind_wave_height_max,wind_wave_period_max,wind_wave_peak_period_max,swell_wave_height_max,swell_wave_direction_dominant,swell_wave_period_max,swell_wave_peak_period_max&timezone=Europe%2FMoscow")
+func getMarineForecast(url string) (structs.MarineForecast, error) {
+	resp, err := http.Get(url)
 	if err != nil {
 		return structs.MarineForecast{}, fmt.Errorf("ошибка при отправке запроса: %v", err)
 	}
@@ -58,3 +62,6 @@ func getMarineForecast() (structs.MarineForecast, error) {
 	}
 	return forecastMarine, nil
 }
+
+//"https://api.open-meteo.com/v1/forecast?latitude=42.13076&longitude=41.65917&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&timezone=Europe%2FMoscow"
+// "https://marine-api.open-meteo.com/v1/marine?latitude=42.0625&longitude=41.75&current=wave_height,wave_direction,wave_period,wind_wave_height,wind_wave_direction,wind_wave_period,wind_wave_peak_period,swell_wave_height,swell_wave_direction,swell_wave_period,swell_wave_peak_period&hourly=wave_height,wave_direction,wave_period,wind_wave_height,wind_wave_direction,wind_wave_period,wind_wave_peak_period,swell_wave_height,swell_wave_direction,swell_wave_period,swell_wave_peak_period&daily=wave_height_max,wave_period_max,wind_wave_height_max,wind_wave_period_max,wind_wave_peak_period_max,swell_wave_height_max,swell_wave_direction_dominant,swell_wave_period_max,swell_wave_peak_period_max&timezone=Europe%2FMoscow"
