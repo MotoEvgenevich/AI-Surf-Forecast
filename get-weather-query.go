@@ -4,14 +4,13 @@ import (
 	"ai-forecast/structs"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 )
 
 var forecastWind structs.WeatherForecast
 var forecastMarine structs.MarineForecast
 
-func main() {
+/* func main() {
 	url := "https://api.open-meteo.com/v1/forecast?latitude=42.13076&longitude=41.65917&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m&timezone=Europe%2FMoscow"
 	forecastWind, err := getWindWeatherForecast(url)
 	if err != nil {
@@ -31,7 +30,7 @@ func main() {
 	fmt.Printf("Широта: %v\n Долгота: %v\n", forecastMarine.Latitude, forecastMarine.Longitude)
 	fmt.Printf("Высота свеволовой волны: %v %v\n", forecastMarine.Current.SwellWaveHeight, forecastMarine.CurrentUnits.SwellWaveHeight)
 
-}
+} */
 
 func getWindWeatherForecast(url string) (structs.WeatherForecast, error) {
 	resp, err := http.Get(url)
