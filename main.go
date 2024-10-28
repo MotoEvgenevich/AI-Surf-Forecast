@@ -14,30 +14,7 @@ type WeatherConditions struct {
 var DataWeather []WeatherConditions
 
 func main() {
-	currentTime := time.Now()
-	currentDate := currentTime.Format("2006-01-02T")
-	currentDateSlice := make([]string, 0)
-	h := 0
-	hour := "00-00"
-	for i := 0; i < 41; i++ {
-		date := currentDate + hour
-		currentDateSlice = append(currentDateSlice, date)
-
-		h += 3
-		if h == 24 { // Когда h достигает 24, происходит смена даты
-			h = 0
-			currentTime = currentTime.Add(time.Hour * 24) // Увеличиваем дату на 1 день
-			currentDate = currentTime.Format("2006-01-02T")
-		}
-
-		hour = fmt.Sprintf("%02d-00", h)
-	}
-
-	// Печать всех дат и времени
-	for _, v := range currentDateSlice {
-		fmt.Println(v)
-	}
-
+	currentDateSlice := GetCurrentDatePeriod()
 	// Добавление данных о погоде в слайс структур
 	for _, v := range currentDateSlice {
 		// Заполняем поле времени в MarineForecast и WeatherForecast
@@ -63,4 +40,27 @@ func main() {
 	for _, data := range DataWeather {
 		fmt.Printf("Sea Time: %s, Wind Time: %s\n", data.Sea.Current.Time, data.Wind.Current.Time)
 	}
+}
+
+func GetCurrentDatePeriod() []string {
+	currentTime := time.Now()
+	currentDate := currentTime.Format("2006-01-02T")
+	currentDateSlice := make([]string, 0)
+	h := 0
+	hour := "00-00"
+	for i := 0; i < 41; i++ {
+		date := currentDate + hour
+		currentDateSlice = append(currentDateSlice, date)
+
+		h += 3
+		if h == 24 { // Когда h достигает 24, происходит смена даты
+			h = 0
+			currentTime = currentTime.Add(time.Hour * 24) // Увеличиваем дату на 1 день
+			currentDate = currentTime.Format("2006-01-02T")
+		}
+
+		hour = fmt.Sprintf("%02d-00", h)
+	}
+
+	return currentDateSlice
 }
