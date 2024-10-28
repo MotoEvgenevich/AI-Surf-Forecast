@@ -16,27 +16,7 @@ var DataWeather []WeatherConditions
 func main() {
 	currentDateSlice := GetCurrentDatePeriod()
 	// Добавление данных о погоде в слайс структур
-	for _, v := range currentDateSlice {
-		// Заполняем поле времени в MarineForecast и WeatherForecast
-		sea := structs.MarineForecast{
-			Current: structs.CurrentDataMarine{
-				Time: v, // Добавляем дату и время в поле Time
-			},
-		}
-		wind := structs.WeatherForecast{
-			Current: structs.CurrentWind{
-				Time: v, // Добавляем дату и время в поле Time
-			},
-		}
-
-		// Добавляем структуру в слайс DataWeather
-		DataWeather = append(DataWeather, WeatherConditions{
-			Sea:  sea,
-			Wind: wind,
-		})
-	}
-
-	// Печать содержимого DataWeather для проверки
+	DataWeather = WriteTimeDataToScructs(currentDateSlice)
 	for _, data := range DataWeather {
 		fmt.Printf("Sea Time: %s, Wind Time: %s\n", data.Sea.Current.Time, data.Wind.Current.Time)
 	}
@@ -63,4 +43,28 @@ func GetCurrentDatePeriod() []string {
 	}
 
 	return currentDateSlice
+}
+
+func WriteTimeDataToScructs(currentDateSlice []string) []WeatherConditions {
+	for _, v := range currentDateSlice {
+		// Заполняем поле времени в MarineForecast и WeatherForecast
+		sea := structs.MarineForecast{
+			Current: structs.CurrentDataMarine{
+				Time: v, // Добавляем дату и время в поле Time
+			},
+		}
+		wind := structs.WeatherForecast{
+			Current: structs.CurrentWind{
+				Time: v, // Добавляем дату и время в поле Time
+			},
+		}
+
+		// Добавляем структуру в слайс DataWeather
+		DataWeather = append(DataWeather, WeatherConditions{
+			Sea:  sea,
+			Wind: wind,
+		})
+	}
+
+	return DataWeather
 }
